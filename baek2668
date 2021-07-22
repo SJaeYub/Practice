@@ -1,0 +1,65 @@
+import java.util.*;
+
+public class Main {
+	
+	static int n;
+	static int[][] set;
+	static boolean[] visited;
+	static ArrayList<Integer> result;
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		n = sc.nextInt();
+		set = new int[2][n + 1];
+		visited = new boolean[n + 1];
+		result = new ArrayList<>();
+		
+		for(int i = 0; i <= n; i++) {
+			if(i == 0) {
+				set[0][0] = 0;
+				set[1][0] = 0;
+			}
+			else {
+				set[0][i] = i;
+				set[1][i] = sc.nextInt();
+			}
+		}
+		
+		for(int i = 1; i <= n; i++) {
+			dfs(0, i);
+			visited[i] = false;
+		}
+		
+		Collections.sort(result);
+		System.out.println(result.size());
+		
+		for(int i : result) {
+			System.out.println(i);
+		}
+	}
+	
+	private static void dfs(int a, int b) {		
+		if(visited[b]) {
+			int flag = 0;
+			
+			for(int i = 0; i < result.size(); i++) {
+				if(result.get(i) == b) {
+					flag = 1;
+					return;
+				}
+			}
+			
+			if(flag == 0) {
+				result.add(b);
+			}
+			return;
+		}
+		
+		visited[b] = true;		
+		int num = set[a+1][b];						
+		dfs(0, num);
+		visited[num] = false;
+		return;
+	}
+
+}
