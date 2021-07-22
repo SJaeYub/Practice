@@ -1,0 +1,30 @@
+import java.util.*;
+
+public class Main {
+	
+	static boolean[][] matrix;
+	static int cnt = 0;
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		matrix = new boolean[100][100];
+		
+		for(int k = 0; k < 4; k++) {
+			int x = sc.nextInt();
+			int y = sc.nextInt();
+			int max_x = sc.nextInt();
+			int max_y = sc.nextInt();
+
+			for(int i = y; i < max_y; i++) {
+				for(int j = x; j < max_x; j++) {
+					if(!matrix[i][j]) {
+						matrix[i][j] = true;
+						cnt++;
+					}
+				}
+			}
+		}
+		System.out.println(cnt);
+	}
+
+}
