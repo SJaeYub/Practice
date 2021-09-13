@@ -1,0 +1,78 @@
+import java.util.*;
+
+public class Main {
+	
+	static int[][] relations;
+	static boolean[][] visited;
+	static boolean[] visited2;
+	static int n = 0;
+	static int m = 0;
+	static int[] x = {-1, 1, 0, 0};
+	static int[] y = {0, 0, -1, 1};
+	static ArrayList<Integer> adjList[];
+	static int cnt = 0;
+	static int flag = 0;
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		n = sc.nextInt();
+		m = sc.nextInt();
+		relations = new int[n][n];
+		visited2 = new boolean[n];
+		adjList = new ArrayList[n];
+		
+		for(int i = 0; i < n; i++) {
+			adjList[i] = new ArrayList();
+		}
+		
+		for(int i = 0; i < m; i++) {
+			int temp_a = sc.nextInt();
+			int temp_b = sc.nextInt();
+			
+			adjList[temp_a].add(temp_b);
+			adjList[temp_b].add(temp_a);
+		}
+		
+		 for(int i = 0; i < n; i++) {
+			 if(!visited2[i]) {
+				 if(flag == 1) {
+					 return;
+				 }
+					 cnt = 0;
+				 	dfs(0, i);
+				 
+			 }
+		 }
+		 
+		 if(flag != 1) {
+			 System.out.println(0);
+		 }
+		 
+	}
+	
+	static void dfs(int a, int b) {
+		int current = b;
+		visited2[current] = true;
+//		System.out.println("방문 노드 번호 : " + b);
+//		System.out.println(cnt);
+		if(a == 4) {
+			if(flag != 1) {
+			flag = 1;
+			System.out.println(1);	
+            System.exit(0);
+			return;
+			}
+		}
+		
+		for(int i : adjList[current]) {
+			if(!visited2[i]) {
+				visited2[i] = true;
+				cnt++;
+				dfs(a+1, i);
+			}
+		}
+
+		visited2[b] = false;
+	}
+
+}
