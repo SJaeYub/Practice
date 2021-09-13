@@ -1,0 +1,81 @@
+
+import java.util.*;
+public class Main {
+	
+	static int k = 0;
+	static int v = 0;
+	static int e = 0;
+	static ArrayList<ArrayList<Integer>> relations;
+	static Queue<Integer> q;
+	static boolean[] visited;
+	static int[] color;
+	static int flag = 0;
+	static boolean check;
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		k = sc.nextInt();
+		int status = 0;
+		
+		while(status < k) {
+			
+			flag = 0;
+			v = sc.nextInt();
+			e = sc.nextInt();	
+			relations = new ArrayList<>();
+			color = new int[v+1];
+			visited = new boolean[v+1];
+			check = true;
+			
+			for(int i = 0; i <= v; i++) {
+				relations.add(new ArrayList<>());
+				color[i] = 0;
+			}
+		
+			for(int i = 0; i < e; i++) {
+				int temp = sc.nextInt();
+				int temp2 = sc.nextInt();
+				relations.get(temp).add(temp2);
+				relations.get(temp2).add(temp);
+			}
+			
+			for(int i = 1; i <= v; i++) {
+				if(!check) {
+					break;
+				}
+				if(color[i] == 0) {
+					bfs(i, 1);
+				}
+			}
+			
+			System.out.println(check ? "YES" : "NO");
+			status++;
+		}
+	}
+	
+	static void bfs(int num, int col) {
+		q = new LinkedList<>();
+		q.add(num);
+		color[num] = col;
+		
+		while(!q.isEmpty()) {
+			int current = q.poll();
+			
+			for(int adjv : relations.get(current)) {
+				if(color[adjv] == 0) {
+					q.add(adjv);
+					color[adjv] = color[current]*-1;
+				}
+				else if(color[adjv] + color[current] != 0) {
+//					System.out.println("NO");
+					check = false;
+					flag = 1;
+					break;
+				}
+			}
+		}
+	return;
+	}
+
+
+}
