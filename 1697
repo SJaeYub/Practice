@@ -1,0 +1,71 @@
+import java.util.*;
+
+class Position {
+	int x;
+	int sec;
+	
+	Position(int a, int b) {
+		this.x = a;
+		this.sec = b;
+	}
+}
+
+public class Main {
+	
+	static int n = 0;
+	static int k = 0;
+	static int[] road = new int[100000 + 1];
+	static boolean[] visited = new boolean[100000 + 1];
+	static Queue<Position> q;
+	static int[] x = {-1, 1};
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		n = sc.nextInt();
+		k = sc.nextInt();
+		road[n] = 1;
+		road[k] = 1;
+		q = new LinkedList<>();
+		Position p = new Position(n, 0);
+		q.offer(p);
+		bfs();
+		
+	}
+	
+	static void bfs() {
+		
+		while(!q.isEmpty()) {
+			Position current = q.poll();
+			visited[current.x] = true;
+			int sec_temp = current.sec;
+			
+			for(int i = 0; i < 2; i++) {
+				int mx = current.x + x[i];
+				int jump = current.x*2;
+				
+				if(mx >= 0 && mx < 100001) {
+					if(!visited[mx]) {
+						Position p2 = new Position(mx, sec_temp + 1);
+						q.add(p2);
+						visited[mx] = true;
+					}
+				}
+				if(jump >= 0 && jump < 100001) {
+					if(!visited[jump]) {
+						Position p3 = new Position(jump, sec_temp + 1);
+						q.add(p3);
+						visited[jump] = true;	
+					}
+
+				}
+			}
+			
+			if(current.x == k) {
+				System.out.println(current.sec);
+				return;
+			}
+		}
+		
+	}
+
+}
