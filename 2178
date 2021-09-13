@@ -1,0 +1,81 @@
+import java.util.*;
+
+class Position {
+	int s;
+	int r;
+	int cnt;
+	
+	Position(int a, int b, int c) {
+		this.s = a;
+		this.r = b;
+		this.cnt = c;
+	}
+}
+
+public class Main {
+	
+	static int n = 0;
+	static int m = 0;
+	static int[][] map;
+	static boolean[][] visited;
+	static Queue<Position> q;
+	static int[] x = {-1, 1, 0, 0};
+	static int[] y = {0 , 0, -1, 1};
+	static int cnt = 0;
+	static int ans = 0;
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		n = sc.nextInt();
+		m = sc.nextInt();
+		map = new int[n][m];
+		visited = new boolean[n][m];
+		
+		for(int i = 0; i < n; i++) {
+			String temp1 = sc.next();
+			for(int j = 0; j < m; j++) {
+				char temp = temp1.charAt(j);
+				map[i][j] = temp - '0';
+			}
+		}
+		
+		bfs(0, 0);
+		
+		System.out.println(ans + 1);
+
+	}
+	
+	static void bfs(int a, int b) {		
+		Position p = new Position(a, b, cnt);
+		q = new LinkedList<>();
+		q.offer(p);
+		
+		while(!q.isEmpty()) {
+			Position current = q.poll();
+			int cnt_temp = current.cnt;
+			visited[current.s][current.r] = true;
+			
+			for(int i = 0; i < 4; i++) {
+				int mx = current.r + x[i];
+				int my = current.s + y[i];
+				
+				if(mx >= 0 && my >= 0 && mx < m && my < n) {
+					if(!visited[my][mx] && map[my][mx] == 1) {
+						Position p2 = new Position(my, mx, cnt_temp+1);
+						q.add(p2);
+						visited[my][mx] = true;
+					
+//						System.out.println(my + " " + mx + " " + cnt_temp+1);
+						
+						if(mx + 1 == m && my + 1 == n) {
+							ans = p2.cnt;
+//							System.out.println(mx + 1 + " " + my + 1 + " " + p2.cnt);
+						}
+					}
+				}
+			}
+
+		}
+	}
+
+}
