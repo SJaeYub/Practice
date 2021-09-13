@@ -1,0 +1,52 @@
+import java.util.*;
+
+public class Main {
+	
+	static int n;
+	static int m;
+	static int[][] map;
+	static boolean[] visited;
+	static Queue<Integer> q;
+
+	public static void main(String[] args) {
+		int cnt = 0;
+		Scanner sc = new Scanner(System.in);		
+		n = sc.nextInt();
+		m = sc.nextInt();
+		map = new int[n+1][n+1];
+		visited = new boolean[n+1];
+		q = new LinkedList<Integer>();
+		
+		for(int i = 1; i <= m; i++) {
+			int n1 = sc.nextInt();
+			int n2 = sc.nextInt();
+			map[n1][n2] = map[n2][n1] = 1;
+		}
+
+		for(int i = 1; i <= n; i++) {
+			if(!visited[i]) {
+				bfs(i);
+				cnt++;
+			}
+		}
+		
+		System.out.println(cnt);
+	}
+	
+	static void bfs(int a) {
+		q.offer(a);
+		visited[a] = true;
+		
+		while(!q.isEmpty()) {
+			int current = q.poll();
+			
+			for(int i = 1; i <= n;i++) {
+				if(map[current][i] == 1 && !visited[i]) {
+					q.offer(i);
+					visited[i] = true;
+				}
+			}
+		}
+	}
+
+}
