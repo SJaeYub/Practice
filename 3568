@@ -1,0 +1,136 @@
+import java.util.Scanner;
+import java.util.StringTokenizer;
+
+class Main {
+  public static void main(String[] args) {
+  
+    char[] check_arr = {'[',']','&','*'};
+
+    Scanner sc = new Scanner(System.in);    
+    String front = sc.next();
+
+    boolean swit = true;
+    while(swit) {
+      String rear = sc.next();
+    
+      StringTokenizer strtok1 = new StringTokenizer(rear);
+
+      while(strtok1.hasMoreTokens()) {
+        // System.out.println(strtok1.nextToken());
+        String strtok2 = strtok1.nextToken();
+        
+        // System.out.println(token_length);
+
+        StringTokenizer strtok3 = new StringTokenizer(strtok2, ",");
+        String str4 = strtok3.nextToken();
+        // System.out.println(strtok3.nextToken());
+        int str4_length = str4.length();
+        for(int b = 0; b <= str4_length-1; b++) {
+          if(Character.compare(str4.charAt(b), ';') == 0) {
+            // System.out.println("false");
+            swit = false;
+            break;
+          }
+        }
+        
+
+        StringTokenizer strtok4 = new StringTokenizer(str4, ";");
+
+        String val_str = strtok4.nextToken();
+        int token_length = val_str.length();
+        int flag = 0;
+        int index = 0;
+        // System.out.println(val_str.charAt(0));
+
+        for(int c = 0; c <= token_length - 1; c++) {
+          if(Character.compare(val_str.charAt(c), '[') == 0) {
+            flag = 1;
+            // System.out.println("[");
+            break;
+          }
+          if(Character.compare(val_str.charAt(c), ']') == 0) {
+            // System.out.println("]");
+            flag = 1;
+            break;
+          }
+          if(Character.compare(val_str.charAt(c), '*') == 0) {
+            // System.out.println("*");
+            flag = 1;
+            break;
+          }
+          if(Character.compare(val_str.charAt(c), '&') == 0) {
+            // System.out.println("&");
+            flag = 1;
+            break;
+          }
+        }
+        
+        for(;;) {
+            if(index >= token_length) {
+              break;
+            } 
+            if(Character.compare(val_str.charAt(index), '[') == 0) {
+              flag = 1;
+              // System.out.println("[");
+              break;
+            }
+            if(Character.compare(val_str.charAt(index), ']') == 0) {
+              // System.out.println("]");
+              flag = 1;
+              break;
+            }
+            if(Character.compare(val_str.charAt(index), '*') == 0) {
+              // System.out.println("*");
+              flag = 1;
+              break;
+            }
+            if(Character.compare(val_str.charAt(index), '&') == 0) {
+              // System.out.println("&");
+              flag = 1;
+              break;
+            }
+            index++;
+          }
+
+        if(flag == 1) { 
+        int cnt = 0;
+        
+        char[] val_alp = new char[index];
+        for(int j = 0; j < index; j++) {
+          val_alp[j] = val_str.charAt(j);
+        }
+        
+        String val_al_com = new String(val_alp);
+
+        char[] rear_arr = new char[token_length - index];
+        for(int i = 0; i <= token_length - 1; i++) {
+          int char_index = token_length - 1 - i;
+          if(char_index >= index) {
+            rear_arr[i] = val_str.charAt(char_index);
+            if(Character.compare(val_str.charAt(char_index), '[') == 0) {
+              char temp = rear_arr[i];
+              rear_arr[i] = rear_arr[i - 1];
+              rear_arr[i - 1] = temp;
+            }            
+          }
+          else {
+            break;
+          }
+        }
+
+        String complement = new String(rear_arr);
+        System.out.println(front + complement + " " + val_al_com + ";");
+        }
+
+        else if(flag == 0) {
+          char[] final_arr = new char[token_length];
+          for(int x = 0; x < token_length; x++) {
+            final_arr[x] = val_str.charAt(x);
+          }
+          String final_str = new String(final_arr);
+          System.out.println(front + " " + final_str + ";");
+        }
+      }
+    }
+  }
+}
