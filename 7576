@@ -1,0 +1,105 @@
+import java.util.*;
+
+class Position {
+	int s;
+	int r;
+	int day;
+	
+	Position(int a, int b, int c) {
+		this.s = a;					//y
+		this.r = b;					//x
+		this.day = c;
+	}
+}
+
+public class Main {
+
+	static int m;
+	static int n;
+	static int box[][];
+	static boolean visited[][];
+	static boolean one_pos[][];
+	static int cnt = 0;
+	static int[] x = {-1, 1, 0, 0};
+	static int[] y = {0, 0, -1, 1};
+	static Queue<Position> q;
+	
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		m = sc.nextInt();			//가로
+		n = sc.nextInt();			//세로
+		box = new int[n][m];
+		visited = new boolean[n][m];
+		
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < m; j++) {
+				box[i][j] = sc.nextInt();				
+			}
+		}
+
+		q = new LinkedList<>();
+		
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < m; j++) {
+				if(box[i][j] == 1) {
+//					System.out.println("------------------");
+//					bfs(i, j);
+					Position p3 = new Position(i, j, 0);
+					q.offer(p3);
+				}
+			}
+		}
+		
+		bfs();
+		int flag = 0;
+		
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < m; j++) {
+				if(box[i][j] == 0) {
+					System.out.println("-1");
+					flag = 1;
+					break;
+				}
+			}
+			if(flag == 1) {
+				break;
+			}
+		}
+		
+		if(flag == 0) {
+			System.out.println(cnt);
+		}
+		
+
+	}
+	
+	static int bfs() {
+
+		while(!q.isEmpty()) {
+			Position current = q.poll();
+			visited[current.s][current.r] = true;	
+			int day_temp = current.day;
+			
+			for(int i = 0; i < 4; i++) {
+				int mx = current.r + x[i];
+				int my = current.s + y[i];
+				
+				if(mx >= 0 && my >= 0 && mx < m && my < n) {
+					if(!visited[my][mx]) {
+						if(box[my][mx] == 0) {
+							Position p2 = new Position(my, mx, day_temp + 1);
+							q.add(p2);
+							visited[my][mx] = true;
+							box[my][mx] = 2;
+							cnt = p2.day;
+							int temp = day_temp + 1;
+//							System.out.println(my + " " + mx + " " + temp);
+						}
+					}
+				}
+			}
+		}
+		return 0;
+	}
+
+}
