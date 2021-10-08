@@ -1,0 +1,96 @@
+class Solution {
+    
+    static boolean[] check;
+    static int correctness;
+    static int correctness2 = 0;
+    static int[] rank = {-1, 6, 5, 4, 3, 2, 0};		//당첨된 숫자가 없으면 0, 인덱스를 맞추기 위해 -1 삽입
+    static int min_rank;
+    static int max_rank = -1;							//0이 전부 당첨된 숫자면 됨
+    static boolean[] visited;
+    static int temp;
+    static int numOfZero = 0;
+    
+    public int[] solution(int[] lottos, int[] win_nums) {
+        
+        check = new boolean[win_nums.length];
+        correctness = 0;
+        visited = new boolean[46];
+        temp = win_nums.length;
+        
+        for(int i = 0; i < lottos.length; i++) {
+            if(lottos[i] == 0) {
+                numOfZero++;
+            }
+        }
+        
+        for(int i = 0; i < win_nums.length; i++) {
+            for(int j = 0; j < win_nums.length; j++) {
+                if(win_nums[i] == lottos[j]) {
+                    check[i] = true;  						//체크되지 않은 당첨번호는 0에 넣으면됨
+                    correctness++;
+                }
+            }
+        }
+        
+        if(correctness == 1) {
+                correctness = 0;
+        }
+        
+        for(int i = 0; i < rank.length; i++) {
+            if(rank[i] == correctness) {
+                min_rank = i;
+                break;
+            }
+        }
+        
+        dfs(lottos, win_nums, numOfZero);       
+        
+        int[] answer = {max_rank, min_rank};
+        return answer;
+        
+    }
+    
+    static void dfs(int[] lottos, int[] win_nums, int cnt) {
+        
+        if(cnt == 0) {
+            for(int i = 0; i < win_nums.length; i++) {
+            	for(int j = 0; j < win_nums.length; j++) {
+                	if(win_nums[i] == lottos[j]) {
+                    	correctness2++;
+                	}
+            	}
+        	}
+            
+            if(correctness2 == 1) {
+                correctness2 = 0;
+            }
+            
+            for(int i = 0; i < rank.length; i++) {
+            	if(rank[i] == correctness2) {
+            		max_rank = Math.max(max_rank, i);
+                	break;
+            	}
+        	}
+            return;
+        }
+        
+        for(int i = 0; i < lottos.length; i++) {
+            if(!check[i]) {
+                check[i] = true;
+                
+                for(int j = 0; j < lottos.length; j++) {
+                    if(lottos[j] == 0) {
+                        lottos[j] = win_nums[i];
+                        dfs(lottos, win_nums, cnt-1);
+                        check[i] = false;
+                    }
+                }
+                
+                check[i] = false;
+            }
+        }
+         
+        
+    }
+    
+}
