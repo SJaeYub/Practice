@@ -1,0 +1,74 @@
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+class Position {
+    int x;
+    int y;
+    int cnt;
+
+    Position(int a, int b, int c) {
+        this.y = a;
+        this.x = b;
+        this.cnt = c;
+    }
+}
+
+public class Main {
+
+    static int fin_Po_y;
+    static int fin_Po_x;
+    static Queue<Position> q;
+    static boolean[][] visited;
+    static int[] x = {-2, -1, 1, 2, 2, 1, -1, -2};
+    static int[] y = {1, 2, 2, 1, -1, -2, -2, -1};
+    static int chessSize;
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int numOfTest = sc.nextInt();
+
+
+        for (int k = 0; k < numOfTest; k++) {
+
+            chessSize = sc.nextInt();
+            visited = new boolean[chessSize][chessSize];
+            int[][] chessBoard = new int[chessSize][chessSize];
+            Position current = new Position(sc.nextInt(), sc.nextInt(), 0);
+            fin_Po_y = sc.nextInt();
+            fin_Po_x = sc.nextInt();
+            q = new LinkedList<>();
+            q.add(current);
+            bfs();
+
+        }
+
+    }
+
+    static void bfs() {
+        while(!q.isEmpty()) {
+            Position cur_temp = q.poll();
+            visited[cur_temp.y][cur_temp.x] = true;
+
+            if (cur_temp.y == fin_Po_y && cur_temp.x == fin_Po_x) {
+                System.out.println(cur_temp.cnt);
+                return;
+
+            }
+
+            for (int i = 0; i < 8; i++) {
+                int mx = cur_temp.x + x[i];
+                int my = cur_temp.y + y[i];
+
+                if (mx >= 0 && mx < chessSize && my >= 0 && my < chessSize) {
+                    if(!visited[my][mx]) {
+                        Position temp = new Position(my, mx, cur_temp.cnt + 1);
+                        q.add(temp);
+                        visited[my][mx] = true;
+                    }
+                }
+            }
+        }
+    }
+}
