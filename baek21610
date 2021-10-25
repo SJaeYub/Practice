@@ -1,0 +1,125 @@
+import java.util.*;
+
+public class Main {
+
+	static class Cloud {
+		int y;
+		int x;
+		int d;
+		int s;
+
+		Cloud(int a, int b, int c, int d) {
+			this.y = a;
+			this.x = b;
+			this.d = c;
+			this.s = d;
+		}
+	}
+
+	static int n, m;
+	static int[][] map;
+	static boolean[][] visited;
+	static ArrayList<Cloud> cloud_list = new ArrayList<>();
+	static int[] x = { -1, -1, 0, 1, 1, 1, 0, -1 };
+	static int[] y = { 0, -1, -1, -1, 0, 1, 1, 1 };
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		n = sc.nextInt();
+		m = sc.nextInt();
+		map = new int[n][n];
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				map[i][j] = sc.nextInt();
+			}
+		}
+
+		int start_y = n - 1, start_x = 0;
+		cloud_list.add(new Cloud(start_y, start_x, 0, 0));
+		cloud_list.add(new Cloud(start_y, start_x + 1, 0, 0));
+		cloud_list.add(new Cloud(start_y - 1, start_x, 0, 0));
+		cloud_list.add(new Cloud(start_y - 1, start_x + 1, 0, 0));
+
+		for (int i = 0; i < m; i++) {
+			int dir = sc.nextInt() - 1;
+			int spd = sc.nextInt();
+			visited = new boolean[n][n];
+
+			moving_cloud(dir, spd);
+		}
+
+		System.out.println(count_Water());
+
+	}
+
+	private static int count_Water() {
+		int totalWater = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				totalWater += map[i][j];
+			}
+		}
+
+		return totalWater;
+	}
+
+	private static void moving_cloud(int a, int b) {
+		input_data(a, b); // 각 구름에 이동방향과 이동 칸수 정보 저장
+
+		for (Cloud cld : cloud_list) {
+			int mx = (cld.x + n + x[cld.d] * (cld.s % n)) % n;
+			int my = (cld.y + n + y[cld.d] * (cld.s % n)) % n;
+
+			cld.x = mx;
+			cld.y = my; // 구름 정보 업데이트
+			map[my][mx] += 1;
+			visited[my][mx] = true; // 구름이 사라진 표시
+		}
+
+		copy_water(cloud_list); // 물양 증가 완료
+		cloud_list.clear(); // 구름 정보 초기화(새로운 구름 생성을 위해)
+
+		cloud_birth(cloud_list); // 다시 구름생성해서 배열에 삽입
+	}
+
+	private static void cloud_birth(ArrayList<Cloud> c) {
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (!visited[i][j]) {
+					if (map[i][j] >= 2) {
+						c.add(new Cloud(i, j, 0, 0));
+						map[i][j] -= 2;
+					}
+				}
+			}
+		}
+	}
+
+	private static void copy_water(ArrayList<Cloud> c) {
+
+		for (Cloud cld : c) {
+			int water_cnt = 0;
+			for (int i = 1; i <= 7; i += 2) {
+				int x_check = cld.x + x[i];
+				int y_check = cld.y + y[i];
+
+				if (x_check >= 0 && x_check < n && y_check >= 0 && y_check < n) {
+					if (map[y_check][x_check] > 0) {
+						water_cnt++;
+					}
+				}
+			}
+			map[cld.y][cld.x] += water_cnt;
+		}
+	}
+
+	private static void input_data(int a, int b) {
+		for (Cloud cld : cloud_list) {
+			cld.d = a;
+			cld.s = b;
+		}
+	}
+
+}
