@@ -1,0 +1,112 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+	static class Fireball {
+		int r, c, m, s, d;
+
+		public Fireball(int r, int c, int m, int s, int d) {
+			super();
+			this.r = r;
+			this.c = c;
+			this.m = m;
+			this.s = s;
+			this.d = d;
+		}
+	}
+
+	static int N, M, K;
+	static ArrayList<Fireball>[][] map;
+	static ArrayList<Fireball> list = new ArrayList<>(); // 파이어볼을 관리하는 리스트
+	static int[] dr = { -1, -1, 0, 1, 1, 1, 0, -1 };
+	static int[] dc = { 0, 1, 1, 1, 0, -1, -1, -1 };
+	static int[] rArr = {-1, -1, 0, 1, 1, 1, 0, -1};
+    static int[] cArr = {0, 1, 1, 1, 0, -1, -1, -1};
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		N = sc.nextInt();
+		M = sc.nextInt();
+		K = sc.nextInt();
+		map = new ArrayList[N][N];
+
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				map[i][j] = new ArrayList<Fireball>();
+			}
+		}
+
+		for (int i = 0; i < M; i++) {
+			list.add(new Fireball(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt()));
+		}
+
+		for (int i = 0; i < K; i++) {
+			move();
+			checkFireball();
+		}
+		
+		int answer = 0;
+		for(Fireball cur : list) {
+			answer+=cur.m;
+		}
+		System.out.println(answer);
+
+	}
+
+	private static void checkFireball() {
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (map[i][j].size() == 1) {
+					map[i][j].clear();
+				}
+
+				if (map[i][j].size() < 2) {
+					continue;
+				}
+
+				int massSum = 0, sSum = 0;
+
+				boolean even = map[i][j].get(0).d % 2 == 0 ? true : false;
+				boolean odd = map[i][j].get(0).d % 2 == 1 ? true : false;
+
+				for (Fireball cur : map[i][j]) {
+					massSum += cur.m;
+					sSum += cur.s;
+					even = even & cur.d % 2 == 0 ? true : false;
+					odd = odd & cur.d % 2 == 1 ? true : false;
+					list.remove(cur);
+				}
+				int newMass = massSum / 5;
+				int size = map[i][j].size();
+				map[i][j].clear();
+
+				if (newMass == 0) {
+					continue;
+				}
+				int newS = sSum / size;
+				if (even | odd) {
+					for (int k = 0; k < 8; k += 2) {
+						list.add(new Fireball(i, j, newMass, newS, k));
+					}
+				} else {
+					for (int k = 1; k < 8; k += 2) {
+						list.add(new Fireball(i, j, newMass, newS, k));
+					}
+				}
+			}
+		}
+	}
+
+	private static void move() {
+		for (Fireball fb : list) {
+			int nr = (fb.r + N + rArr[fb.d] * (fb.s % N)) % N;
+			int nc = (fb.c + N + cArr[fb.d] * (fb.s % N)) % N;
+
+			fb.r = nr;
+			fb.c = nc;
+			map[nr][nc].add(fb); // 해당 map은 배열 하나하나가 배열리스트이므로 .add로 넣어줘야한다 즉, 해당 위치의 파이어볼의 정보가 어레이리스트로 들어가는것
+		}
+	}
+
+}
